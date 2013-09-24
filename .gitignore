@@ -1,0 +1,3 @@
+# Ignore files with personal data.
+secrets.rb
+/.bundle
