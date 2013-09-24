@@ -33,5 +33,5 @@ Basic Usage
 LICENSE
 -------
 
-Copyright (c) 2010 [Michael Jones aka MJ](http://mjfreshyfresh.com/about) and
-distributed under the MIT license. See the `COPYING` file for more info.
+Copyright (c) 2010 [MJFreshyfresh](http://mjfreshyfresh.com/about) and
+distributed under the MIT license.
