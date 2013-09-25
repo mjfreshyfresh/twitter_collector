@@ -1,4 +1,3 @@
 # Ignore files with personal data.
 secrets.rb
-/data/accounts.txt
-/.bundle
+data/accounts.txt
