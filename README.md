@@ -9,6 +9,8 @@ Setup
 -----
 In the [Twitter Developers Portal](https://dev.twitter.com) you need to create an app and get the credentials required to run read only application.
 
+Create a data/accounts.txt file, each line a unique twitter handle. 
+
 Create a secrets.rb file and fill it with the following content which you received via the Twitter Developer Portal
 
 	APP_NAME = 'AnyThingYouWantAlsoDBName'
