@@ -40,18 +40,13 @@ class Collector
         begin
           page = client.send(relation_type, account.twitter_handle, {:cursor => cursor})
         rescue Twitter::Error::TooManyRequests
-            puts "Twitter::Error::TooManyRequests"
             sleep rand_num
             client = get_client
             retry
         end
         results = page.users
         results.each do |result|
-          # Check for Acct 
-          temp_account = Account.get(:twitter_handle=>result.screen_name.downcase)
-          if temp_account.nil?
-            temp_account = Account.create(:twitter_handle=>result.screen_name.downcase,:deets=>result.attrs.to_json)
-          end
+          temp_account = Account.first_or_create(:twitter_handle=>result.screen_name.downcase)
 
           if relation_type == :followers
             account_from_id = temp_account.id
@@ -61,21 +56,20 @@ class Collector
             account_to_id = temp_account.id
           end
           
-          if Relation.get(:account_from_id=>account_from_id, :account_to_id=> account_to_id)
+          if Relation.first(:account_from_id=>account_from_id, :account_to_id=> account_to_id)
             puts "[DUP] from: #{account_from_id} to: #{account_to_id}"
           else            
             count = count + 1
             Relation.create(:account_from_id=>account_from_id, :account_to_id=> account_to_id)
-            print "#{count}, "
-          end              
-        
+            puts "#{count}: #{Account.first(:id=>account_from_id).twitter_handle} ->  #{Account.first(:id=>account_to_id).twitter_handle}"
+          end        
         end     
         cursor = page.next_cursor
       end          
-      Account.get(account.id).update(relation_type => true)
+      Account.first(account.id).update(relation_type => true)
       puts "[COMPLETED] #{relation_type} for #{account.twitter_handle}"
     end
-    puts "[DONE] Accounts"
+    puts "[DONE]"
     nil
   end
   
@@ -93,7 +87,7 @@ private
       t = @tokens[@token_depth]      
       puts "[#{Time.now}] We're back up! Starting #{@token_depth} with #{@tokens.size} fresh ones."      
     end
-    puts "Loading: #{t.inspect}"    
+    puts "New Token: #{t.id}"    
     client = Twitter::Client.new(    
       :consumer_key => CONSUMER_KEY,
       :consumer_secret => CONSUMER_SECRET,

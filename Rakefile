@@ -1,13 +1,16 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'environment.rb')
 require File.join(File.expand_path(File.dirname(__FILE__)), 'collector.rb')
 
+desc "DESTRUCTIVE: Does it all and a bag of chips!"
+task :boom => [:bootstrap, :sample_token, :load_data, :fetch_friends, :export_data]
+
 desc "DESTRUCTIVE bootstrap of the database (e.g. rake bootstrap)"
 task :bootstrap do
   puts "Bootstrapping database."
   ::DataMapper.auto_migrate!
 end
 
-desc "Run test code..."
+desc "Load a sample token"
 task :sample_token do
   puts "Loading Sample Token..."
   Token.create(
@@ -19,7 +22,7 @@ end
 
 desc "Run test code..."
 task :test do
-  puts "Running Twitte Tests..."
+  puts "Running Twitter Tests..."
   s = Collector.new
   s.test
   puts "DONE"
@@ -35,7 +38,7 @@ end
 
 desc "Fetch Follower Data from Twitter"
 task :fetch_followers do
-  puts "Fetching Data..."
+  puts "Fetching Follower Data..."
   s = Collector.new  
   s.fetch(:followers)
   puts "DONE"
@@ -43,7 +46,7 @@ end
 
 desc "Fetch Friend from Twitter"
 task :fetch_friends do
-  puts "Fetching Data..."
+  puts "Fetching Friend Data..."
   s = Collector.new  
   s.fetch(:friends)
   puts "DONE"
@@ -75,4 +78,3 @@ task :export_data do
   
   puts "DONE"
 end
-

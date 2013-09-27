@@ -1,6 +1,7 @@
 class Account
     
   include DataMapper::Resource
+  validates_uniqueness_of :twitter_handle  
 
   property :id, Serial
   property :twitter_handle, Text
