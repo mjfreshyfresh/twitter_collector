@@ -52,6 +52,19 @@ task :fetch_friends do
   puts "DONE"
 end
 
+desc "Parse JSON Account Object and populate db"
+task :expand do
+  puts "Expanding Account Data..."
+  accounts = Account.all
+  accounts.each do |account| 
+    account.foller_count = account.deets.parse('//followers')
+    
+  end
+  s.fetch(:friends)
+  puts "DONE"
+end
+
+
 desc "Writing out Node and Edge Files"
 task :export_data do
   puts "Writing Node Data..."
