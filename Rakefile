@@ -1,6 +1,33 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'environment.rb')
 require File.join(File.expand_path(File.dirname(__FILE__)), 'collector.rb')
 
+
+desc "Export Circos Data Sets"
+task :export_circos do
+  
+  # replace with the source ids you wish to display
+  source_ids = [1, 3, 4, 5, 6, 8, 9, 10, 2, 7]
+  # replace with the target ids you wish to display  
+  target_ids = [841, 1351, 782, 1394, 1413, 811, 17, 1219, 1412, 288, 1824, 1343, 795, 780, 44, 784, 1375, 832, 35, 1397]
+  
+  sources = Account.all(:id=>source_ids)
+  targets = Account.all(:id=>target_ids)  
+  output = File.open( "./data/circos.txt", "w+" )  
+  output << "labels "
+  sources.each{|account| output << "#{account.twitter_handle.strip.upcase[0..8]} "}
+  output << "\n"  
+
+  targets.each do |target|
+    output << "#{Account.first(:id=>target.id).twitter_handle.strip[0..8]} "
+      sources.each do |account|      
+        output << "#{Relation.first(:account_from_id=>account.id, :account_to_id=>target.id).nil? ? 0 : 1} "
+      end
+    output << "\n"      
+    end
+  output.close  
+end
+
+
 desc "DESTRUCTIVE: Does it all and a bag of chips!"
 task :boom => [:bootstrap, :sample_token, :load_data, :fetch_friends, :export_data]
 
